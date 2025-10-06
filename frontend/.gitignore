@@ -26,4 +26,7 @@ yarn-error.log*
 backend/.env*
 frontend/.env*
 
-.history/backend/
+.history/
+backend/.env*
+frontend/.env*
+
