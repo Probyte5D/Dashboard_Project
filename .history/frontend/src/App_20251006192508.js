@@ -1,7 +1,7 @@
 // frontend/App.js
 import React from 'react';
 import BookingList from './components/BookingList';
-import './App.css';
+import './app.css';
 
 
 export default function App() {

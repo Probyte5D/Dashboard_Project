@@ -1,23 +1,14 @@
 // backend/getBookings.js
 import AWS from 'aws-sdk';
-import dotenv from 'dotenv';
 
-dotenv.config(); // carica le variabili da .env
-
-// 🔹 Configurazione credenziali AWS in locale
-AWS.config.update({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-const dynamo = new AWS.DynamoDB.DocumentClient();
+const dynamo = new AWS.DynamoDB.DocumentClient({ region: 'eu-north-1' });
 const BOOKINGS_TABLE = "Bookings";
 const GUESTS_TABLE = "Guests";
 
 // Funzione per ottenere prenotazioni da DynamoDB con paginazione
 export async function getBookings({ limit = 50, lastKey = null }) {
   try {
+    // Scan DynamoDB con limit e paginazione
     const scanParams = {
       TableName: BOOKINGS_TABLE,
       Limit: limit,
@@ -27,6 +18,7 @@ export async function getBookings({ limit = 50, lastKey = null }) {
     const bookingsData = await dynamo.scan(scanParams).promise();
     let bookings = bookingsData.Items || [];
 
+    // Filtra prenotazioni ±7 giorni
     const now = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
@@ -38,11 +30,14 @@ export async function getBookings({ limit = 50, lastKey = null }) {
       return date >= sevenDaysAgo && date <= sevenDaysFuture;
     });
 
+    // Arricchisci con dati guest usando batchGet
     if (bookings.length > 0) {
       const guestIds = bookings.map(b => ({ guestId: b.guestId }));
       const batchParams = {
         RequestItems: {
-          [GUESTS_TABLE]: { Keys: guestIds }
+          [GUESTS_TABLE]: {
+            Keys: guestIds
+          }
         }
       };
 

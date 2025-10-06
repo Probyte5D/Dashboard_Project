@@ -10,7 +10,6 @@ const bookingsSlice = createSlice({
       state.list.push(...newBookings);
       state.lastKey = action.payload.lastKey || null;
     }
-
   }
 });
 

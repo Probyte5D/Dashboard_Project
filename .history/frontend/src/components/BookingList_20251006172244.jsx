@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBookings } from '../redux/bookingsSlice';
-import BookingCard from './BookingCard';
 
 export default function BookingList() {
   const bookings = useSelector(state => state.bookings.list);
@@ -20,15 +19,17 @@ export default function BookingList() {
   };
 
   return (
-    <div className="bookings-container">
+    <div>
       <h2>Bookings</h2>
-      {bookings.map(b => (
-        <BookingCard key={b.bookingId} booking={b} />
-      ))}
+      <ul>
+        {bookings.map(b => (
+          <li key={b.bookingId}>
+            {b.bookingDate} - {b.guest?.guestName || b.guestName}
+          </li>
+        ))}
+      </ul>
       {lastKey !== null && (
-        <button className="load-more-btn" onClick={loadMore}>
-          Load More
-        </button>
+        <button onClick={loadMore}>Load More</button>
       )}
     </div>
   );

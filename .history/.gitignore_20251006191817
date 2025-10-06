@@ -10,7 +10,7 @@ backend/dist/
 # Logs
 *.log
 
-# Environment files 
+# Environment files (non committare mai le chiavi!)
 .env
 
 # IDE / OS files

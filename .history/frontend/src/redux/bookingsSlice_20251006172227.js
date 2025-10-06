@@ -6,11 +6,9 @@ const bookingsSlice = createSlice({
   initialState: { list: [], lastKey: 0 },
   reducers: {
     addBookings: (state, action) => {
-      const newBookings = action.payload.bookings || []; // fallback se undefined
-      state.list.push(...newBookings);
-      state.lastKey = action.payload.lastKey || null;
+      state.list.push(...action.payload.bookings);
+      state.lastKey = action.payload.lastKey;
     }
-
   }
 });
 
