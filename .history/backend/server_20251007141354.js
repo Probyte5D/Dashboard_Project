@@ -13,8 +13,9 @@ const app = express();
 app.use(cors());
 
 // express.json() e express.urlencoded() con limite -> leggono il body delle richieste grandi senza causare 413
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '1kb' }));
+app.use(express.urlencoded({ limit: '1kb', extended: true }));
+
 
 // Endpoint POST /getBookings
 // Il frontend invia { limit, lastKey } per la paginazione

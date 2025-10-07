@@ -11,7 +11,7 @@ import App from './App';
 const store = configureStore({
   reducer: { bookings: bookingsReducer }
 });
-// Render dell'app dentro l'elemento root
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}><App /></Provider>
 );

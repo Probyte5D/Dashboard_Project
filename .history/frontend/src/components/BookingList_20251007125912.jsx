@@ -28,15 +28,12 @@ export default function BookingList() {
     dispatch(fetchBookings());
   }, [dispatch]);
 
-  // Funzione Load More: viene chiamata cliccando il pulsante "Load More"
-  // Se lastKey non è null, significa che ci sono altre pagine da caricare
-  // Chiama fetchBookings passando lastKey per ottenere la pagina successiva
   const loadMore = () => {
     if (lastKey !== null) {
       dispatch(fetchBookings(lastKey));
     }
   };
-// Render del componente
+
   return (
     <div className="bookings-container">
       <h2>Bookings</h2>

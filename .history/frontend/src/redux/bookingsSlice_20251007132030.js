@@ -25,7 +25,6 @@ const bookingsSlice = createSlice({
 // Export dell’azione addBookings FUNZ PRECEDENT per essere usata nei componenti o thunk
 export const { addBookings } = bookingsSlice.actions;
 // Thunk asincrono per chiamare il backend e aggiornare lo store + POST a /getBookings con limit e lastKey per gestire paginazione
-
 //FETCHBBOKINGS chiamata / diapatch result > redux che agigorna lo stato .In Redux, un thunk è una funzione che può fare cose extra prima di cambiare lo stato.Normalmente un reducer prende lo stato e un’azione e restituisce un nuovo stato sincronamente. Un thunk, invece, ti permette di fare operazioni asincrone (es. chiamate al backend) prima di aggiornare lo stato.
 
 

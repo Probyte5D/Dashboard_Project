@@ -36,7 +36,7 @@ export default function BookingList() {
       dispatch(fetchBookings(lastKey));
     }
   };
-// Render del componente
+
   return (
     <div className="bookings-container">
       <h2>Bookings</h2>

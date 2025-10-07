@@ -42,5 +42,4 @@ async function seed() {
   }
 }
 
-// Avvio dello script
 seed();

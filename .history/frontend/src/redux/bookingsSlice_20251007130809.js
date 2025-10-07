@@ -9,11 +9,8 @@ const bookingsSlice = createSlice({
   initialState: { list: [], lastKey: 0 },
   reducers: {
 
-       // Funzione che aggiunge prenotazioni ricevute dal backend
-    // - Se action.payload.bookings è undefined, usa un array vuoto /Fallback
-    // - Concateno le nuove prenotazioni con quelle già presenti usando PUSH
-    // - lastkey PAYLOADAggiorna lastKey con la chiave della prossima pagina, se disponibile
-
+    // Funzione che aggiunge prenotazioni ricevute dal backend
+    // Fallback se undefined// Concateno nuove prenotazioni con METODO PUSH// Aggiorno chiave pagina successiva con lastkey PAYLOAD
     addBookings: (state, action) => {
       const newBookings = action.payload.bookings || []; 
       state.list.push(...newBookings)
@@ -25,8 +22,7 @@ const bookingsSlice = createSlice({
 // Export dell’azione addBookings FUNZ PRECEDENT per essere usata nei componenti o thunk
 export const { addBookings } = bookingsSlice.actions;
 // Thunk asincrono per chiamare il backend e aggiornare lo store + POST a /getBookings con limit e lastKey per gestire paginazione
-
-//FETCHBBOKINGS chiamata / diapatch result > redux che agigorna lo stato .In Redux, un thunk è una funzione che può fare cose extra prima di cambiare lo stato.Normalmente un reducer prende lo stato e un’azione e restituisce un nuovo stato sincronamente. Un thunk, invece, ti permette di fare operazioni asincrone (es. chiamate al backend) prima di aggiornare lo stato.
+//FETCHBBOKINGSIn Redux, un thunk è una funzione che può fare cose extra prima di cambiare lo stato.Normalmente un reducer prende lo stato e un’azione e restituisce un nuovo stato sincronamente.Un thunk, invece, ti permette di fare operazioni asincrone (es. chiamate al backend) prima di aggiornare lo stato.
 
 
 export const fetchBookings = (lastKey = 0) => async (dispatch) => {

@@ -2,6 +2,8 @@
 // Endpoint per ottenere la lista di prenotazioni con paginazione e arricchimento dei dati ospite.
 // Risolve il problema HTTP 413 (Payload Too Large) limitando i risultati e usando chiamate batch più efficienti.
 
+
+
 import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
 // carico le variabili AWS dal file .env
@@ -44,34 +46,10 @@ export async function getBookings({ limit = 50, lastKey = null }) {
       const date = new Date(b.bookingDate);
       return date >= sevenDaysAgo && date <= sevenDaysFuture;
     });
+    //AGGIUNGERE INFO OSPITI/ RIDURRE LE CHIAMATE PESO DELLA RISP
+//Arricchimento dei dati (guest info) ogni prenotazione> aggiungiamo i dati dell’ospite (nome, email, ecc.) usando una sola chiamata BatchGet. evito di fare una chiamata per ogni record ( lenta).Creiamo una mappa (guestsMap) per arricchire ogni booking con le info del guest corrispondente. map() è un metodo JavaScript che crea un nuovo array trasformando ogni elemento dell’array originale.Qui lo usiamo per prendere tutti i guestId presenti nelle prenotazioni e creare un array di oggetti come richiesto da DynamoDB ({ guestId: "123" }).
 
-    // AGGIUNGERE INFO OSPITI / RIDURRE LE CHIAMATE E IL PESO DELLA RISPOSTA
-// Arricchimento dei dati (guest info) per ogni prenotazione:
-// - Aggiungiamo i dati dell’ospite (nome, email, ecc.) usando una sola chiamata BatchGet.
-//   Questo evita di fare una chiamata per ogni prenotazione, che sarebbe lenta.
-// - Creiamo una mappa (guestsMap) per arricchire ogni booking con le informazioni dell’ospite corrispondente.
-// - .map() è un metodo JavaScript che trasforma un array in un altro array. 
-//   Qui lo usiamo per estrarre tutti i guestId dalle prenotazioni e creare un array di oggetti 
-//   come richiesto da DynamoDB: { guestId: "123" }.
-
-// BatchGet:
-// - Prende dal DB un array di dati completi delle persone con questi ID: G01, G02, G03.
-// - Esempio di struttura restituita: { guestId: "G01", name: "Anna", email: "anna@email.com" }
-
-// guestsMap (oggetto):
-// - Organizza i dati restituiti da BatchGet in una “rubrica”
-// - Serve per trovare subito i dati di G01 nella tabella Guests (nome, email associati)
-// - Esempio struttura:
-//   {
-//     "G01": { guestId: "G01", name: "Anna", email: "anna@email.com" },
-//     "G02": { guestId: "G02", name: "Luca", email: "luca@email.com" }
-//   }
-
-// forEach finale:
-// - Unisce le due tabelle: per ogni prenotazione aggiunge la chiave `guest`
-// - Esempio risultato finale:
-//   { bookingId: 1, guestId: "G01", guest: { guestId: "G01", name: "Anna", email: "anna@email.com" } }
-
+//BatchGet> prende dal  DB un array di dati completi delle persone con questi ID: G01, G02 e G03 STRUTTURA: { guestId: "G01", name: "Anna", email: "anna@email.com" },/ guestsMap(oggetto)> ORGANIZZA I DATI PRESI CON BATCHGET ti serve per trovare subito chi è G01 nella tabella guests quindi nome e email associati   "G01": { guestId: "G01", name: "Anna", email: "anna@email.com" } / {  FOR EACH: UNISCE LE DUE TABRLLe CICLO For bookingId: 1, guestId: "G01", guest: { guestId: "G01", name: "Anna", email: "anna@email.com" } }
 
     if (bookings.length > 0) {
       const guestIds = bookings.map(b => ({ guestId: b.guestId }));
